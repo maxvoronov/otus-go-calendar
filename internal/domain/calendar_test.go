@@ -1,6 +1,7 @@
-package calendar
+package domain_test
 
 import (
+	"github.com/maxvoronov/otus-go-calendar/internal/domain"
 	"github.com/maxvoronov/otus-go-calendar/storage/inmemory"
 	"testing"
 	"time"
@@ -14,7 +15,7 @@ type testEventData struct {
 
 func TestCreateCalendar(t *testing.T) {
 	calendarTitle := "My Calendar"
-	calendar := NewCalendar(calendarTitle, inmemory.NewInMemoryStorage())
+	calendar := domain.NewCalendar(calendarTitle, inmemory.NewInMemoryStorage())
 
 	if calendar == nil {
 		t.Fatalf("Failed to initiate calendar")
@@ -32,13 +33,13 @@ func TestCreateEvent(t *testing.T) {
 		time.Now().Add(13 * time.Hour),
 	}
 
-	calendar := NewCalendar("My Calendar", inmemory.NewInMemoryStorage())
-	event, err := calendar.CreateEvent(testData.Title, &testData.From, &testData.To)
+	calendar := domain.NewCalendar("My Calendar", inmemory.NewInMemoryStorage())
+	event, err := calendar.CreateEvent(testData.Title, testData.From, testData.To)
 	if err != nil {
 		t.Fatalf("Failed to create event: %s", err)
 	}
 
-	if event.Id.String() == "" {
+	if event.ID.String() == "" {
 		t.Fatalf("Invalid event ID: expect not empty")
 	}
 
@@ -66,8 +67,8 @@ func TestSaveEvent(t *testing.T) {
 		time.Now().Add(13 * time.Hour),
 	}
 
-	calendar := NewCalendar("My Calendar", inmemory.NewInMemoryStorage())
-	event, err := calendar.CreateEvent(testData.Title, &testData.From, &testData.To)
+	calendar := domain.NewCalendar("My Calendar", inmemory.NewInMemoryStorage())
+	event, err := calendar.CreateEvent(testData.Title, testData.From, testData.To)
 	if err != nil {
 		t.Fatalf("Failed to create event: %s", err)
 	}
@@ -78,9 +79,9 @@ func TestSaveEvent(t *testing.T) {
 		t.Fatalf("Failed to update event: %s", err)
 	}
 
-	foundEvent, err := calendar.GetEventById(event.Id.String())
+	foundEvent, err := calendar.GetEventByID(event.ID.String())
 	if err != nil {
-		t.Fatalf("Failed to load event by ID [%s]: %s", event.Id.String(), err)
+		t.Fatalf("Failed to load event by ID [%s]: %s", event.ID.String(), err)
 	}
 
 	if foundEvent.Title != testEventTitle {
@@ -90,10 +91,10 @@ func TestSaveEvent(t *testing.T) {
 
 func TestRemoveEvent(t *testing.T) {
 	eventTime := time.Now()
-	calendar := NewCalendar("My Calendar", inmemory.NewInMemoryStorage())
-	event1, _ := calendar.CreateEvent("Event #1", &eventTime, &eventTime)
-	_, _ = calendar.CreateEvent("Event #2", &eventTime, &eventTime)
-	_, _ = calendar.CreateEvent("Event #3", &eventTime, &eventTime)
+	calendar := domain.NewCalendar("My Calendar", inmemory.NewInMemoryStorage())
+	event1, _ := calendar.CreateEvent("Event #1", eventTime, eventTime)
+	_, _ = calendar.CreateEvent("Event #2", eventTime, eventTime)
+	_, _ = calendar.CreateEvent("Event #3", eventTime, eventTime)
 
 	if err := calendar.RemoveEvent(event1); err != nil {
 		t.Fatalf("Failed to remove event: %s", err)

@@ -1,24 +1,28 @@
 package inmemory
 
 import (
-	"github.com/maxvoronov/otus-go-calendar/entity"
+	"github.com/maxvoronov/otus-go-calendar/internal/domain"
 	"sync"
+	"time"
 )
 
-type InMemoryStorage struct {
+// Storage struct
+type Storage struct {
 	sync.Mutex
-	events map[string]*entity.Event
+	events map[string]*domain.Event
 }
 
-func NewInMemoryStorage() *InMemoryStorage {
-	eventStorage := make(map[string]*entity.Event)
-	return &InMemoryStorage{events: eventStorage}
+// NewInMemoryStorage Create new in-memory storage
+func NewInMemoryStorage() *Storage {
+	eventStorage := make(map[string]*domain.Event)
+	return &Storage{events: eventStorage}
 }
 
-func (storage *InMemoryStorage) GetAll() ([]*entity.Event, error) {
+// GetAll Return list of all events
+func (storage *Storage) GetAll() ([]*domain.Event, error) {
 	storage.Mutex.Lock()
 	defer storage.Mutex.Unlock()
-	result := make([]*entity.Event, 0, len(storage.events))
+	result := make([]*domain.Event, 0, len(storage.events))
 	for _, event := range storage.events {
 		result = append(result, event)
 	}
@@ -26,7 +30,8 @@ func (storage *InMemoryStorage) GetAll() ([]*entity.Event, error) {
 	return result, nil
 }
 
-func (storage *InMemoryStorage) GetById(id string) (*entity.Event, error) {
+// GetByID Return event by ID
+func (storage *Storage) GetByID(id string) (*domain.Event, error) {
 	storage.Mutex.Lock()
 	defer storage.Mutex.Unlock()
 	if event, ok := storage.events[id]; ok {
@@ -36,18 +41,35 @@ func (storage *InMemoryStorage) GetById(id string) (*entity.Event, error) {
 	return nil, nil
 }
 
-func (storage *InMemoryStorage) Save(event *entity.Event) error {
+// GetByPeriod Return list of events by period
+func (storage *Storage) GetByPeriod(from, to time.Time) ([]*domain.Event, error) {
 	storage.Mutex.Lock()
 	defer storage.Mutex.Unlock()
-	storage.events[event.Id.String()] = event
+	result := make([]*domain.Event, 0)
+
+	for _, event := range storage.events {
+		if event.DateFrom.Before(to) && event.DateTo.After(from) {
+			result = append(result, event)
+		}
+	}
+
+	return result, nil
+}
+
+// Save Create or update event in storage
+func (storage *Storage) Save(event *domain.Event) error {
+	storage.Mutex.Lock()
+	defer storage.Mutex.Unlock()
+	storage.events[event.ID.String()] = event
 
 	return nil
 }
 
-func (storage *InMemoryStorage) Remove(event *entity.Event) error {
+// Remove event from storage
+func (storage *Storage) Remove(event *domain.Event) error {
 	storage.Mutex.Lock()
 	defer storage.Mutex.Unlock()
-	delete(storage.events, event.Id.String())
+	delete(storage.events, event.ID.String())
 
 	return nil
 }
