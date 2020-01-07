@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package events;
+option go_package = "eventproto";
+
+service EventService {
+    rpc Create (EventCreateRequest) returns (EventCreateResponse) {}
+    rpc Update (EventUpdateRequest) returns (EventUpdateResponse) {}
+    rpc Delete (EventDeleteRequest) returns (EventDeleteResponse) {}
+    rpc GetListByPeriod (EventGetListByPeriodRequest) returns (EventGetListByPeriodResponse) {}
+}
+
+message Event {
+    string id = 1;
+    string title = 2;
+    google.protobuf.Timestamp date_from = 3;
+    google.protobuf.Timestamp date_to = 4;
+}
+
+message EventCreateRequest {
+    string title = 1;
+    google.protobuf.Timestamp date_from = 2;
+    google.protobuf.Timestamp date_to = 3;
+}
+
+message EventCreateResponse {
+    Event event = 1;
+}
+
+message EventUpdateRequest {
+    string id = 1;
+    string title = 2;
+    google.protobuf.Timestamp date_from = 3;
+    google.protobuf.Timestamp date_to = 4;
+}
+
+message EventUpdateResponse {
+    Event event = 1;
+}
+
+message EventDeleteRequest {
+    string id = 1;
+}
+
+message EventDeleteResponse {}
+
+message EventGetListByPeriodRequest {
+    google.protobuf.Timestamp date_from = 1;
+    google.protobuf.Timestamp date_to = 2;
+}
+
+message EventGetListByPeriodResponse {
+    repeated Event events = 1;
+}

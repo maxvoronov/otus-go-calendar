@@ -4,8 +4,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/maxvoronov/otus-go-calendar/api/handler"
 	"github.com/maxvoronov/otus-go-calendar/api/middleware"
-	"github.com/maxvoronov/otus-go-calendar/internal/domain"
-	"github.com/sirupsen/logrus"
+	"github.com/maxvoronov/otus-go-calendar/internal/config"
 	"net"
 	"net/http"
 	"time"
@@ -34,12 +33,10 @@ func initRouter(h *handler.Handler) *mux.Router {
 }
 
 // StartServer Start HTTP server for API
-func StartServer(storage domain.StorageInterface, config *ServerConfig) {
-	logger := logrus.New()
-	logger.SetFormatter(&logrus.JSONFormatter{})
+func StartServer(cfg *config.Config, config *ServerConfig) {
 	h := &handler.Handler{
-		Storage: storage,
-		Logger:  logger,
+		Storage: cfg.Storage,
+		Logger:  cfg.Logger,
 	}
 	router := initRouter(h)
 
@@ -56,6 +53,6 @@ func StartServer(storage domain.StorageInterface, config *ServerConfig) {
 	}
 
 	if err := server.ListenAndServe(); err != http.ErrServerClosed {
-		logger.Fatalf("HTTP server error: %s", err)
+		cfg.Logger.Fatalf("HTTP server error: %s", err)
 	}
 }

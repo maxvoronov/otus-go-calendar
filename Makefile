@@ -17,11 +17,15 @@ build:
 		-X ${PROJECT}/internal/version.BuildTime=${BUILD_TIME}" \
 		-o ./bin/$(PROJECTNAME)
 
+## genproto: Generate gRPC interfaces by proto files
+genproto:
+	@protoc grpc/proto/*.proto --go_out=plugins=grpc:.
+
 ## test: Start tests
 test:
 	@go test ./...
 
 ## lint: Check source code by linters
 lint:
-	@echo "Start go vet..." && go vet ./... && echo "Done!\n"
-	@echo "Start golint..." && golint ./... && echo "Done!"
+	@echo "Checking go vet..." && go vet ./... && echo "Done!\n"
+	@echo "Checking golint..." && golint ./... && echo "Done!"
