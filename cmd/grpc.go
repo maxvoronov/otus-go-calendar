@@ -30,7 +30,7 @@ var (
 )
 
 func init() {
-	apiServerCmd.PersistentFlags().StringVar(&grpcParamHost, "host", "0.0.0.0", "Listening host")
-	apiServerCmd.PersistentFlags().StringVar(&grpcParamPort, "port", "6565", "Listening port")
-	apiServerCmd.PersistentFlags().Uint8Var(&grpcParamConnTimeout, "timeout", 15, "Connection timeout in seconds")
+	grpcServerCmd.PersistentFlags().StringVar(&grpcParamHost, "host", "0.0.0.0", "Listening host")
+	grpcServerCmd.PersistentFlags().StringVar(&grpcParamPort, "port", "6565", "Listening port")
+	grpcServerCmd.PersistentFlags().Uint8Var(&grpcParamConnTimeout, "timeout", 15, "Connection timeout in seconds")
 }

@@ -33,7 +33,7 @@ var (
 )
 
 func init() {
-	apiServerCmd.PersistentFlags().StringVar(&apiParamHost, "host", "", "Listening host")
+	apiServerCmd.PersistentFlags().StringVar(&apiParamHost, "host", "0.0.0.0", "Listening host")
 	apiServerCmd.PersistentFlags().StringVar(&apiParamPort, "port", "8080", "Listening port")
 	apiServerCmd.PersistentFlags().Uint8Var(&apiParamReadTimeout, "read-timeout", 10, "Read timeout in seconds")
 	apiServerCmd.PersistentFlags().Uint8Var(&apiParamWriteTimeout, "write-timeout", 10, "Write timeout in seconds")
