@@ -1,5 +1,6 @@
 PROJECT?="github.com/maxvoronov/otus-go-calendar"
 PROJECTNAME="go-calendar"
+DOCKER=docker-compose -f deployments/docker-compose.yml
 
 COMMIT := $(shell git rev-parse --short HEAD)
 VERSION := $(shell git describe --tags --abbrev=0)
@@ -16,6 +17,14 @@ build:
 		-X ${PROJECT}/internal/version.Version=${VERSION} \
 		-X ${PROJECT}/internal/version.BuildTime=${BUILD_TIME}" \
 		-o ./bin/$(PROJECTNAME)
+
+## start: Start application in docker containers with hot reload
+start:
+	@$(DOCKER) up -d --build
+
+## stop: Stop application and remove docker containers
+stop:
+	@$(DOCKER) down --remove-orphans
 
 ## genproto: Generate gRPC interfaces by proto files
 genproto:

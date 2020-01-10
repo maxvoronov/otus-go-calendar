@@ -1,0 +1,49 @@
+version: "3.5"
+services:
+  api:
+    container_name: otus-calendar-api
+    build:
+      context: ..
+      dockerfile: deployments/images/golang/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    volumes:
+      - ..:/app
+    environment:
+      HOTRELOAD_APP_CMD: "api-server"
+    networks:
+      - otus-network
+
+  grpc:
+    container_name: otus-calendar-grpc
+    build:
+      context: ..
+      dockerfile: deployments/images/golang/Dockerfile
+    ports:
+      - "6565:6565"
+    depends_on:
+      - database
+    volumes:
+      - ..:/app
+    environment:
+      HOTRELOAD_APP_CMD: "grpc-server"
+    networks:
+      - otus-network
+
+  database:
+    container_name: otus-calendar-database
+    image: postgres:12.1
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: calendar_db
+    networks:
+      - otus-network
+
+networks:
+  otus-network:
+    name: otus-network
