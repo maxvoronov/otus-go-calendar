@@ -12,8 +12,8 @@ type Storage struct {
 	events map[string]*domain.Event
 }
 
-// NewInMemoryStorage Create new in-memory storage
-func NewInMemoryStorage() *Storage {
+// NewStorage Create new in-memory storage
+func NewStorage() *Storage {
 	eventStorage := make(map[string]*domain.Event)
 	return &Storage{events: eventStorage}
 }

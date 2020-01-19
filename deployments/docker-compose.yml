@@ -13,6 +13,11 @@ services:
       - ..:/app
     environment:
       HOTRELOAD_APP_CMD: "api-server"
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USER: root
+      DB_PASS: password
+      DB_NAME: calendar_db
     networks:
       - otus-network
 
@@ -29,6 +34,11 @@ services:
       - ..:/app
     environment:
       HOTRELOAD_APP_CMD: "grpc-server"
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USER: root
+      DB_PASS: password
+      DB_NAME: calendar_db
     networks:
       - otus-network
 
@@ -43,6 +53,22 @@ services:
       POSTGRES_DB: calendar_db
     networks:
       - otus-network
+
+  migrations:
+    container_name: otus-calendar-migrations
+    build:
+      context: ..
+      dockerfile: deployments/images/migrator/Dockerfile
+    depends_on:
+      - database
+    volumes:
+      - ./migrations:/migrations
+    networks:
+      - otus-network
+    entrypoint:
+      - "/usr/local/bin/goose"
+      - "postgres"
+      - "postgres://root:password@database:5432/calendar_db?sslmode=disable"
 
 networks:
   otus-network:

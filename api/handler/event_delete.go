@@ -29,6 +29,10 @@ func (h *Handler) EventDeleteHandler(req *http.Request) APIResponse {
 		return h.Error(http.StatusNotFound, errors.New("Event not found"))
 	}
 
+	if err := h.Storage.Remove(event); err != nil {
+		return h.Error(http.StatusInternalServerError, err)
+	}
+
 	return h.sendJSON(http.StatusAccepted, nil)
 }
 

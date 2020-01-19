@@ -15,7 +15,7 @@ type testEventData struct {
 
 func TestCreateCalendar(t *testing.T) {
 	calendarTitle := "My Calendar"
-	calendar := domain.NewCalendar(calendarTitle, inmemory.NewInMemoryStorage())
+	calendar := domain.NewCalendar(calendarTitle, inmemory.NewStorage())
 
 	if calendar == nil {
 		t.Fatalf("Failed to initiate calendar")
@@ -33,7 +33,7 @@ func TestCreateEvent(t *testing.T) {
 		time.Now().Add(13 * time.Hour),
 	}
 
-	calendar := domain.NewCalendar("My Calendar", inmemory.NewInMemoryStorage())
+	calendar := domain.NewCalendar("My Calendar", inmemory.NewStorage())
 	event, err := calendar.CreateEvent(testData.Title, testData.From, testData.To)
 	if err != nil {
 		t.Fatalf("Failed to create event: %s", err)
@@ -67,7 +67,7 @@ func TestSaveEvent(t *testing.T) {
 		time.Now().Add(13 * time.Hour),
 	}
 
-	calendar := domain.NewCalendar("My Calendar", inmemory.NewInMemoryStorage())
+	calendar := domain.NewCalendar("My Calendar", inmemory.NewStorage())
 	event, err := calendar.CreateEvent(testData.Title, testData.From, testData.To)
 	if err != nil {
 		t.Fatalf("Failed to create event: %s", err)
@@ -91,7 +91,7 @@ func TestSaveEvent(t *testing.T) {
 
 func TestRemoveEvent(t *testing.T) {
 	eventTime := time.Now()
-	calendar := domain.NewCalendar("My Calendar", inmemory.NewInMemoryStorage())
+	calendar := domain.NewCalendar("My Calendar", inmemory.NewStorage())
 	event1, _ := calendar.CreateEvent("Event #1", eventTime, eventTime)
 	_, _ = calendar.CreateEvent("Event #2", eventTime, eventTime)
 	_, _ = calendar.CreateEvent("Event #3", eventTime, eventTime)

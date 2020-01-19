@@ -30,6 +30,18 @@ stop:
 genproto:
 	@protoc grpc/proto/*.proto --go_out=plugins=grpc:.
 
+## migrate: Apply all migrations
+migrate:
+	@$(DOCKER) run --rm migrations up
+
+## migrate-down: Rollback migrations
+migrate-down:
+	@$(DOCKER) run --rm migrations down
+
+## migrate-status: Rollback migrations
+migrate-status:
+	@$(DOCKER) run --rm migrations status
+
 ## test: Start tests
 test:
 	@go test ./...

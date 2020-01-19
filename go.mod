@@ -3,8 +3,6 @@ module github.com/maxvoronov/otus-go-calendar
 go 1.12
 
 require (
-	github.com/cosmtrek/air v1.12.0 // indirect
-	github.com/fatih/color v1.9.0 // indirect
 	github.com/golang/protobuf v1.3.2
 	github.com/google/go-cmp v0.3.1 // indirect
 	github.com/gorilla/mux v1.7.3
