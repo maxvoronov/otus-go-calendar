@@ -1,9 +1,10 @@
 package inmemory
 
 import (
-	"github.com/maxvoronov/otus-go-calendar/internal/domain"
 	"sync"
 	"time"
+
+	"github.com/maxvoronov/otus-go-calendar/internal/domain"
 )
 
 // Storage struct

@@ -2,9 +2,10 @@ package handler
 
 import (
 	"errors"
-	"github.com/maxvoronov/otus-go-calendar/internal/domain"
 	"net/http"
 	"time"
+
+	"github.com/maxvoronov/otus-go-calendar/internal/domain"
 )
 
 type eventCreateRequest struct {
@@ -54,7 +55,7 @@ func (data *eventCreateRequest) parse(req *http.Request) error {
 
 	data.Title = req.FormValue("title")
 	if data.Title == "" {
-		return errors.New("Event title is required")
+		return errors.New("event title is required")
 	}
 
 	if data.DateFrom, err = time.Parse(time.RFC3339, req.FormValue("date_from")); err != nil {
@@ -66,7 +67,7 @@ func (data *eventCreateRequest) parse(req *http.Request) error {
 	}
 
 	if data.DateFrom.After(data.DateTo) {
-		return errors.New("Date From can not be after Date To")
+		return errors.New("date From can not be after Date To")
 	}
 
 	return nil

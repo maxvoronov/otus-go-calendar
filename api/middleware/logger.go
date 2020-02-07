@@ -1,9 +1,10 @@
 package middleware
 
 import (
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 // LoggerMiddleware Middleware for logging incoming requests
@@ -17,7 +18,7 @@ func LoggerMiddleware(log *logrus.Logger) func(next http.Handler) http.Handler {
 				"uri":     req.RequestURI,
 				"host":    req.Host,
 				"ip":      req.RemoteAddr,
-				"latency": time.Now().Sub(latencyTime).Seconds(),
+				"latency": time.Since(latencyTime).Seconds(),
 			}).Info()
 		})
 	}

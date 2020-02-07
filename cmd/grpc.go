@@ -2,9 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/maxvoronov/otus-go-calendar/grpc"
 	"github.com/spf13/cobra"
-	"time"
 )
 
 var (

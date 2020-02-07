@@ -2,13 +2,14 @@ package grpc
 
 import (
 	"context"
+	"time"
+
 	"github.com/golang/protobuf/ptypes/timestamp"
 	eventproto "github.com/maxvoronov/otus-go-calendar/grpc/proto"
 	"github.com/maxvoronov/otus-go-calendar/internal/domain"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"time"
 )
 
 // ServerConfig contains general options for gRPC server

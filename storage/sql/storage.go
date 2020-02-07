@@ -3,14 +3,15 @@ package sql
 import (
 	"context"
 	"fmt"
+	"net"
+	"time"
+
 	"github.com/jackc/pgx/v4/log/logrusadapter"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/maxvoronov/otus-go-calendar/internal/domain"
 	"github.com/pkg/errors"
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
-	"net"
-	"time"
 )
 
 // Storage struct

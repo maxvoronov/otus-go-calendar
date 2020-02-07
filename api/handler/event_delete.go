@@ -2,8 +2,9 @@ package handler
 
 import (
 	"errors"
-	"github.com/satori/go.uuid"
 	"net/http"
+
+	uuid "github.com/satori/go.uuid"
 )
 
 type eventDeleteRequest struct {
@@ -26,7 +27,7 @@ func (h *Handler) EventDeleteHandler(req *http.Request) APIResponse {
 	}
 
 	if event == nil {
-		return h.Error(http.StatusNotFound, errors.New("Event not found"))
+		return h.Error(http.StatusNotFound, errors.New("event not found"))
 	}
 
 	if err := h.Storage.Remove(event); err != nil {
@@ -43,7 +44,7 @@ func (data *eventDeleteRequest) parse(req *http.Request) error {
 
 	eventID := req.FormValue("id")
 	if eventID == "" {
-		return errors.New("Event ID is required")
+		return errors.New("event ID is required")
 	}
 
 	var err error

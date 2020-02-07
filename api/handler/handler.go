@@ -2,11 +2,12 @@ package handler
 
 import (
 	"encoding/json"
+	"net/http"
+	"strconv"
+
 	"github.com/maxvoronov/otus-go-calendar/internal/domain"
 	"github.com/maxvoronov/otus-go-calendar/internal/version"
 	"github.com/sirupsen/logrus"
-	"net/http"
-	"strconv"
 )
 
 // Handler for processing API endpoints
@@ -51,6 +52,6 @@ func (h *Handler) sendJSON(code int, data interface{}) APIResponse {
 		resp.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		resp.Header().Set("Content-Length", strconv.Itoa(len(encodedData)))
 		resp.WriteHeader(code)
-		resp.Write(encodedData)
+		_, _ = resp.Write(encodedData)
 	}
 }

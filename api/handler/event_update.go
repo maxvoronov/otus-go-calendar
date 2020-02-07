@@ -2,9 +2,10 @@ package handler
 
 import (
 	"errors"
-	"github.com/satori/go.uuid"
 	"net/http"
 	"time"
+
+	uuid "github.com/satori/go.uuid"
 )
 
 type eventUpdateRequest struct {
@@ -40,7 +41,7 @@ func (h *Handler) EventUpdateHandler(req *http.Request) APIResponse {
 	}
 
 	if event == nil {
-		return h.Error(http.StatusNotFound, errors.New("Event not found"))
+		return h.Error(http.StatusNotFound, errors.New("event not found"))
 	}
 
 	event.Title = data.Title
@@ -66,7 +67,7 @@ func (data *eventUpdateRequest) parse(req *http.Request) error {
 
 	eventID := req.FormValue("id")
 	if eventID == "" {
-		return errors.New("Event ID is required")
+		return errors.New("event ID is required")
 	}
 
 	if data.ID, err = uuid.FromString(eventID); err != nil {
@@ -75,7 +76,7 @@ func (data *eventUpdateRequest) parse(req *http.Request) error {
 
 	data.Title = req.FormValue("title")
 	if data.Title == "" {
-		return errors.New("Event title is required")
+		return errors.New("event title is required")
 	}
 
 	if data.DateFrom, err = time.Parse(time.RFC3339, req.FormValue("date_from")); err != nil {
@@ -87,7 +88,7 @@ func (data *eventUpdateRequest) parse(req *http.Request) error {
 	}
 
 	if data.DateFrom.After(data.DateTo) {
-		return errors.New("Date From can not be after Date To")
+		return errors.New("date From can not be after Date To")
 	}
 
 	return nil

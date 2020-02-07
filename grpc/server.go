@@ -1,9 +1,10 @@
 package grpc
 
 import (
+	"net"
+
 	eventproto "github.com/maxvoronov/otus-go-calendar/grpc/proto"
 	"google.golang.org/grpc"
-	"net"
 )
 
 // StartServer Start gRPC server

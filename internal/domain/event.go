@@ -1,8 +1,9 @@
 package domain
 
 import (
-	"github.com/satori/go.uuid"
 	"time"
+
+	uuid "github.com/satori/go.uuid"
 )
 
 // Event struct

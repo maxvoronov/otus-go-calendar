@@ -1,10 +1,11 @@
 package domain_test
 
 import (
-	"github.com/maxvoronov/otus-go-calendar/internal/domain"
-	"github.com/maxvoronov/otus-go-calendar/storage/inmemory"
 	"testing"
 	"time"
+
+	"github.com/maxvoronov/otus-go-calendar/internal/domain"
+	"github.com/maxvoronov/otus-go-calendar/storage/inmemory"
 )
 
 type testEventData struct {

@@ -2,9 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/maxvoronov/otus-go-calendar/internal/config"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 var (

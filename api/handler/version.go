@@ -1,8 +1,9 @@
 package handler
 
 import (
-	"github.com/maxvoronov/otus-go-calendar/internal/version"
 	"net/http"
+
+	"github.com/maxvoronov/otus-go-calendar/internal/version"
 )
 
 // VersionHandler Return current application version

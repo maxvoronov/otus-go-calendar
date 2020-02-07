@@ -1,9 +1,10 @@
 package domain_test
 
 import (
-	"github.com/maxvoronov/otus-go-calendar/internal/domain"
 	"testing"
 	"time"
+
+	"github.com/maxvoronov/otus-go-calendar/internal/domain"
 )
 
 func TestNewEvent(t *testing.T) {

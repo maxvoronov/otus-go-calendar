@@ -1,13 +1,14 @@
 package api
 
 import (
+	"net"
+	"net/http"
+	"time"
+
 	"github.com/gorilla/mux"
 	"github.com/maxvoronov/otus-go-calendar/api/handler"
 	"github.com/maxvoronov/otus-go-calendar/api/middleware"
 	"github.com/maxvoronov/otus-go-calendar/internal/config"
-	"net"
-	"net/http"
-	"time"
 )
 
 // ServerConfig contains general options for HTTP server

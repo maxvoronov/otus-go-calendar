@@ -49,4 +49,5 @@ test:
 ## lint: Check source code by linters
 lint:
 	@echo "Checking go vet..." && go vet ./... && echo "Done!\n"
-	@echo "Checking golint..." && golint ./... && echo "Done!"
+	@echo "Checking golint..." && golint ./... && echo "Done!\n"
+	@echo "Checking golangci-lint..." && golangci-lint run ./... && echo "Done!"
