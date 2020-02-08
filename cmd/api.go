@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/maxvoronov/otus-go-calendar/api"
@@ -28,7 +29,12 @@ var (
 			}
 
 			fmt.Println("Starting API server...")
-			api.StartServer(appConfig, config)
+			apiServer, err := api.InitializeServer()
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+			apiServer.Start(config)
 		},
 	}
 )

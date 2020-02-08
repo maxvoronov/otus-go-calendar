@@ -8,7 +8,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/maxvoronov/otus-go-calendar/api/handler"
 	"github.com/maxvoronov/otus-go-calendar/api/middleware"
-	"github.com/maxvoronov/otus-go-calendar/internal/config"
+	"github.com/maxvoronov/otus-go-calendar/internal/domain"
+	"github.com/sirupsen/logrus"
 )
 
 // ServerConfig contains general options for HTTP server
@@ -20,24 +21,20 @@ type ServerConfig struct {
 	MaxHeaderBytes int
 }
 
-func initRouter(h *handler.Handler) *mux.Router {
-	router := mux.NewRouter()
-	router.HandleFunc("/", h.Handle(h.VersionHandler))
-	router.HandleFunc("/create_event", h.Handle(h.EventCreateHandler)).Methods(http.MethodPost)
-	router.HandleFunc("/update_event", h.Handle(h.EventUpdateHandler)).Methods(http.MethodPost)
-	router.HandleFunc("/delete_event", h.Handle(h.EventDeleteHandler)).Methods(http.MethodPost)
-	router.HandleFunc("/events_for_day", h.Handle(h.EventsForDayHandler)).Methods(http.MethodGet)
-	router.HandleFunc("/events_for_week", h.Handle(h.EventsForWeekHandler)).Methods(http.MethodGet)
-	router.HandleFunc("/events_for_month", h.Handle(h.EventsForMonthHandler)).Methods(http.MethodGet)
-
-	return router
+type server struct {
+	Storage domain.StorageInterface
+	Logger  *logrus.Logger
 }
 
-// StartServer Start HTTP server for API
-func StartServer(cfg *config.Config, config *ServerConfig) {
+func newServer(storage domain.StorageInterface, logger *logrus.Logger) *server {
+	return &server{Storage: storage, Logger: logger}
+}
+
+// Start HTTP server for API
+func (serv *server) Start(config *ServerConfig) {
 	h := &handler.Handler{
-		Storage: cfg.Storage,
-		Logger:  cfg.Logger,
+		Storage: serv.Storage,
+		Logger:  serv.Logger,
 	}
 	router := initRouter(h)
 
@@ -54,6 +51,19 @@ func StartServer(cfg *config.Config, config *ServerConfig) {
 	}
 
 	if err := server.ListenAndServe(); err != http.ErrServerClosed {
-		cfg.Logger.Fatalf("HTTP server error: %s", err)
+		serv.Logger.Fatalf("HTTP server error: %s", err)
 	}
+}
+
+func initRouter(h *handler.Handler) *mux.Router {
+	router := mux.NewRouter()
+	router.HandleFunc("/", h.Handle(h.VersionHandler))
+	router.HandleFunc("/create_event", h.Handle(h.EventCreateHandler)).Methods(http.MethodPost)
+	router.HandleFunc("/update_event", h.Handle(h.EventUpdateHandler)).Methods(http.MethodPost)
+	router.HandleFunc("/delete_event", h.Handle(h.EventDeleteHandler)).Methods(http.MethodPost)
+	router.HandleFunc("/events_for_day", h.Handle(h.EventsForDayHandler)).Methods(http.MethodGet)
+	router.HandleFunc("/events_for_week", h.Handle(h.EventsForWeekHandler)).Methods(http.MethodGet)
+	router.HandleFunc("/events_for_month", h.Handle(h.EventsForMonthHandler)).Methods(http.MethodGet)
+
+	return router
 }

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/maxvoronov/otus-go-calendar/grpc"
@@ -18,14 +19,17 @@ var (
 		Short: "Run gRPC server",
 		Run: func(cmd *cobra.Command, args []string) {
 			serverConfig := &grpc.ServerConfig{
-				Storage:     appConfig.Storage,
-				Logger:      appConfig.Logger,
 				Port:        grpcParamPort,
 				ConnTimeout: time.Duration(grpcParamConnTimeout) * time.Second,
 			}
 
 			fmt.Println("Starting gRPC server...")
-			grpc.StartServer(serverConfig)
+			grpcServer, err := grpc.InitializeServer()
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+			grpcServer.Start(serverConfig)
 		},
 	}
 )
