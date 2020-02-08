@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"errors"
 	"net/http"
 
@@ -16,12 +17,13 @@ type eventDeleteRequest struct {
 // Fields:
 // 	 id: UUID
 func (h *Handler) EventDeleteHandler(req *http.Request) APIResponse {
+	ctx := context.Background()
 	data := &eventDeleteRequest{}
 	if err := data.parse(req); err != nil {
 		return h.Error(http.StatusBadRequest, err)
 	}
 
-	event, err := h.Storage.GetByID(data.ID.String())
+	event, err := h.Storage.GetByID(ctx, data.ID.String())
 	if err != nil {
 		return h.Error(http.StatusInternalServerError, err)
 	}
@@ -30,7 +32,7 @@ func (h *Handler) EventDeleteHandler(req *http.Request) APIResponse {
 		return h.Error(http.StatusNotFound, errors.New("event not found"))
 	}
 
-	if err := h.Storage.Remove(event); err != nil {
+	if err := h.Storage.Remove(ctx, event); err != nil {
 		return h.Error(http.StatusInternalServerError, err)
 	}
 

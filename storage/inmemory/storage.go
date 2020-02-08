@@ -1,6 +1,7 @@
 package inmemory
 
 import (
+	"context"
 	"sync"
 	"time"
 
@@ -20,9 +21,9 @@ func NewStorage() *Storage {
 }
 
 // GetAll Return list of all events
-func (storage *Storage) GetAll() ([]*domain.Event, error) {
-	storage.Mutex.Lock()
-	defer storage.Mutex.Unlock()
+func (storage *Storage) GetAll(_ context.Context) ([]*domain.Event, error) {
+	storage.Lock()
+	defer storage.Unlock()
 	result := make([]*domain.Event, 0, len(storage.events))
 	for _, event := range storage.events {
 		result = append(result, event)
@@ -32,9 +33,9 @@ func (storage *Storage) GetAll() ([]*domain.Event, error) {
 }
 
 // GetByID Return event by ID
-func (storage *Storage) GetByID(id string) (*domain.Event, error) {
-	storage.Mutex.Lock()
-	defer storage.Mutex.Unlock()
+func (storage *Storage) GetByID(_ context.Context, id string) (*domain.Event, error) {
+	storage.Lock()
+	defer storage.Unlock()
 	if event, ok := storage.events[id]; ok {
 		return event, nil
 	}
@@ -43,9 +44,9 @@ func (storage *Storage) GetByID(id string) (*domain.Event, error) {
 }
 
 // GetByPeriod Return list of events by period
-func (storage *Storage) GetByPeriod(from, to time.Time) ([]*domain.Event, error) {
-	storage.Mutex.Lock()
-	defer storage.Mutex.Unlock()
+func (storage *Storage) GetByPeriod(_ context.Context, from, to time.Time) ([]*domain.Event, error) {
+	storage.Lock()
+	defer storage.Unlock()
 	result := make([]*domain.Event, 0)
 
 	for _, event := range storage.events {
@@ -58,18 +59,18 @@ func (storage *Storage) GetByPeriod(from, to time.Time) ([]*domain.Event, error)
 }
 
 // Save Create or update event in storage
-func (storage *Storage) Save(event *domain.Event) error {
-	storage.Mutex.Lock()
-	defer storage.Mutex.Unlock()
+func (storage *Storage) Save(_ context.Context, event *domain.Event) error {
+	storage.Lock()
+	defer storage.Unlock()
 	storage.events[event.ID.String()] = event
 
 	return nil
 }
 
 // Remove event from storage
-func (storage *Storage) Remove(event *domain.Event) error {
-	storage.Mutex.Lock()
-	defer storage.Mutex.Unlock()
+func (storage *Storage) Remove(_ context.Context, event *domain.Event) error {
+	storage.Lock()
+	defer storage.Unlock()
 	delete(storage.events, event.ID.String())
 
 	return nil

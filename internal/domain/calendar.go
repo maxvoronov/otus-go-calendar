@@ -1,6 +1,9 @@
 package domain
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 // CalendarInterface Interface of calendar
 type CalendarInterface interface {
@@ -24,18 +27,18 @@ func NewCalendar(title string, s StorageInterface) *Calendar {
 
 // GetEvents Return list of all events
 func (cal *Calendar) GetEvents() ([]*Event, error) {
-	return cal.storage.GetAll()
+	return cal.storage.GetAll(context.Background())
 }
 
 // GetEventByID Return event by ID
 func (cal *Calendar) GetEventByID(id string) (*Event, error) {
-	return cal.storage.GetByID(id)
+	return cal.storage.GetByID(context.Background(), id)
 }
 
 // CreateEvent Create new event and save it to storage
 func (cal *Calendar) CreateEvent(title string, from, to time.Time) (*Event, error) {
 	event := NewEvent(title, from, to)
-	if err := cal.storage.Save(event); err != nil {
+	if err := cal.storage.Save(context.Background(), event); err != nil {
 		return nil, err
 	}
 
@@ -44,10 +47,10 @@ func (cal *Calendar) CreateEvent(title string, from, to time.Time) (*Event, erro
 
 // UpdateEvent Update existing event
 func (cal *Calendar) UpdateEvent(event *Event) error {
-	return cal.storage.Save(event)
+	return cal.storage.Save(context.Background(), event)
 }
 
 // RemoveEvent Remove existing event
 func (cal *Calendar) RemoveEvent(event *Event) error {
-	return cal.storage.Remove(event)
+	return cal.storage.Remove(context.Background(), event)
 }

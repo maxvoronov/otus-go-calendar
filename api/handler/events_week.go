@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 	"time"
 )
@@ -15,7 +16,7 @@ func (h *Handler) EventsForWeekHandler(req *http.Request) APIResponse {
 		return h.Error(http.StatusBadRequest, err)
 	}
 
-	events, err := h.Storage.GetByPeriod(data.StartDay, data.StartDay.Add(time.Hour*24*7))
+	events, err := h.Storage.GetByPeriod(context.Background(), data.StartDay, data.StartDay.Add(time.Hour*24*7))
 	if err != nil {
 		return h.Error(http.StatusInternalServerError, err)
 	}

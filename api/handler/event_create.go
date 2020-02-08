@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"time"
@@ -35,7 +36,7 @@ func (h *Handler) EventCreateHandler(req *http.Request) APIResponse {
 
 	event := domain.NewEvent(data.Title, data.DateFrom, data.DateTo)
 
-	if err := h.Storage.Save(event); err != nil {
+	if err := h.Storage.Save(context.Background(), event); err != nil {
 		h.Error(http.StatusInternalServerError, err)
 	}
 
