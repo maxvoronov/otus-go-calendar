@@ -1,4 +1,4 @@
-package cmd
+package main
 
 import (
 	"fmt"
@@ -7,12 +7,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
-	Use: "go-calendar [command]",
-}
+func main() {
+	rootCmd := &cobra.Command{
+		Use: "go-calendar [command]",
+	}
 
-// Execute Apply CLI commands
-func Execute() {
 	rootCmd.AddCommand(apiServerCmd)
 	rootCmd.AddCommand(grpcServerCmd)
 	rootCmd.AddCommand(versionCmd)

@@ -5,8 +5,8 @@ RUN apk --no-cache add g++ gcc git
 
 # Hot reload tool
 RUN go get github.com/cosmtrek/air
-COPY deployments/images/golang/configs/hotreload.toml /etc/hotreload.toml
+COPY deployments/images/golang/configs /etc/air
 
 WORKDIR /app
 
-ENTRYPOINT ["/usr/local/bin/air", "-c", "/etc/hotreload.toml"]
+ENTRYPOINT ["/usr/local/bin/air"]

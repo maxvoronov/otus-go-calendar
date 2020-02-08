@@ -3,11 +3,11 @@ tmp_dir = "../tmp"
 
 [build]
 # Just plain old shell command. You could use `make` as well.
-cmd = "go build -o /tmp/app ."
+cmd = "go build -o /tmp/notificator ./cmd/notificator/"
 # Binary file yields from `cmd`.
-bin = "/tmp/app"
+bin = "/tmp/notificator"
 # Customize binary.
-full_bin = "/tmp/app $HOTRELOAD_APP_CMD"
+full_bin = "/tmp/notificator"
 # Watch these filename extensions.
 include_ext = ["go", "mod"]
 # Ignore these filename extensions or directories.

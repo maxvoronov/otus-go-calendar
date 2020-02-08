@@ -18,6 +18,7 @@ services:
       DB_USER: root
       DB_PASS: password
       DB_NAME: calendar_db
+    entrypoint: ["/usr/local/bin/air", "-c", "/etc/air/api.toml"]
     networks:
       - otus-network
 
@@ -39,6 +40,45 @@ services:
       DB_USER: root
       DB_PASS: password
       DB_NAME: calendar_db
+    entrypoint: ["/usr/local/bin/air", "-c", "/etc/air/api.toml"]
+    networks:
+      - otus-network
+
+  scheduler:
+    container_name: otus-calendar-scheduler
+    build:
+      context: ..
+      dockerfile: deployments/images/golang/Dockerfile
+    depends_on:
+      - database
+    volumes:
+      - ..:/app
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USER: root
+      DB_PASS: password
+      DB_NAME: calendar_db
+    entrypoint: ["/usr/local/bin/air", "-c", "/etc/air/scheduler.toml"]
+    networks:
+      - otus-network
+
+  notificator:
+    container_name: otus-calendar-notificator
+    build:
+      context: ..
+      dockerfile: deployments/images/golang/Dockerfile
+    depends_on:
+      - database
+    volumes:
+      - ..:/app
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USER: root
+      DB_PASS: password
+      DB_NAME: calendar_db
+    entrypoint: ["/usr/local/bin/air", "-c", "/etc/air/notificator.toml"]
     networks:
       - otus-network
 

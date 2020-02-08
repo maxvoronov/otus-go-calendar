@@ -12,11 +12,13 @@ help: Makefile
 
 ## build: Build application
 build:
-	@GOOS=${GOOS} GOARCH=${GOARCH} CGO_ENABLED=0 go build \
-		-ldflags="-w -s -X ${PROJECT}/internal/version.Commit=${COMMIT} \
-		-X ${PROJECT}/internal/version.Version=${VERSION} \
-		-X ${PROJECT}/internal/version.BuildTime=${BUILD_TIME}" \
-		-o ./bin/$(PROJECTNAME)
+	@for type in "api" "scheduler" "sender" ; do \
+		CGO_ENABLED=0 go build \
+			-ldflags="-w -s -X ${PROJECT}/internal/version.Commit=${COMMIT} \
+			-X ${PROJECT}/internal/version.Version=${VERSION} \
+			-X ${PROJECT}/internal/version.BuildTime=${BUILD_TIME}" \
+			-o ./bin/$(PROJECTNAME)-$$type ./cmd/$$type/ ; \
+		done
 
 ## start: Start application in docker containers with hot reload
 start:
