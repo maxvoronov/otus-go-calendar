@@ -12,14 +12,13 @@ import (
 )
 
 // Create Method for creating new event
-func (serv *server) Create(ctx context.Context, req *eventproto.EventCreateRequest) (*eventproto.EventCreateResponse, error) {
-	event := domain.NewEvent(
+func (serv *server) Create(_ context.Context, req *eventproto.EventCreateRequest) (*eventproto.EventCreateResponse, error) {
+	event, err := serv.Calendar.CreateEvent(
 		req.GetTitle(),
 		time.Unix(req.DateFrom.GetSeconds(), int64(req.DateFrom.GetNanos())),
 		time.Unix(req.DateTo.GetSeconds(), int64(req.DateTo.GetNanos())),
 	)
-
-	if err := serv.Storage.Save(ctx, event); err != nil {
+	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
@@ -27,8 +26,8 @@ func (serv *server) Create(ctx context.Context, req *eventproto.EventCreateReque
 }
 
 // Update Method for updating event if exists
-func (serv *server) Update(ctx context.Context, req *eventproto.EventUpdateRequest) (*eventproto.EventUpdateResponse, error) {
-	event, err := serv.Storage.GetByID(ctx, req.Id)
+func (serv *server) Update(_ context.Context, req *eventproto.EventUpdateRequest) (*eventproto.EventUpdateResponse, error) {
+	event, err := serv.Calendar.GetEventByID(req.Id)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -37,7 +36,7 @@ func (serv *server) Update(ctx context.Context, req *eventproto.EventUpdateReque
 	event.DateFrom = time.Unix(req.DateFrom.GetSeconds(), int64(req.DateFrom.GetNanos()))
 	event.DateTo = time.Unix(req.DateTo.GetSeconds(), int64(req.DateTo.GetNanos()))
 
-	if err := serv.Storage.Save(ctx, event); err != nil {
+	if err := serv.Calendar.UpdateEvent(event); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
@@ -45,13 +44,13 @@ func (serv *server) Update(ctx context.Context, req *eventproto.EventUpdateReque
 }
 
 // Delete Method for removing event if exists
-func (serv *server) Delete(ctx context.Context, req *eventproto.EventDeleteRequest) (*eventproto.EventDeleteResponse, error) {
-	event, err := serv.Storage.GetByID(ctx, req.Id)
+func (serv *server) Delete(_ context.Context, req *eventproto.EventDeleteRequest) (*eventproto.EventDeleteResponse, error) {
+	event, err := serv.Calendar.GetEventByID(req.Id)
 	if err != nil {
 		return nil, status.Error(codes.NotFound, err.Error())
 	}
 
-	if err := serv.Storage.Remove(ctx, event); err != nil {
+	if err := serv.Calendar.RemoveEvent(event); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
@@ -59,9 +58,8 @@ func (serv *server) Delete(ctx context.Context, req *eventproto.EventDeleteReque
 }
 
 // GetListByPeriod Return all events by date period
-func (serv *server) GetListByPeriod(ctx context.Context, req *eventproto.EventGetListByPeriodRequest) (*eventproto.EventGetListByPeriodResponse, error) {
-	events, err := serv.Storage.GetByPeriod(
-		ctx,
+func (serv *server) GetListByPeriod(_ context.Context, req *eventproto.EventGetListByPeriodRequest) (*eventproto.EventGetListByPeriodResponse, error) {
+	events, err := serv.Calendar.GetEventsByPeriod(
 		time.Unix(req.DateFrom.GetSeconds(), int64(req.DateFrom.GetNanos())),
 		time.Unix(req.DateTo.GetSeconds(), int64(req.DateTo.GetNanos())),
 	)

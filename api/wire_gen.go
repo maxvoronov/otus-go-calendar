@@ -7,7 +7,8 @@ package api
 
 import (
 	"github.com/maxvoronov/otus-go-calendar/internal/logger"
-	"github.com/maxvoronov/otus-go-calendar/storage/sql"
+	"github.com/maxvoronov/otus-go-calendar/internal/service"
+	"github.com/maxvoronov/otus-go-calendar/internal/storage/sql"
 )
 
 // Injectors from wire.go:
@@ -17,7 +18,8 @@ func InitializeServer() (*server, error) {
 	if err != nil {
 		return nil, err
 	}
+	calendarService := service.NewCalendarService(storage)
 	logrusLogger := logger.NewLogger()
-	apiServer := newServer(storage, logrusLogger)
+	apiServer := newServer(calendarService, storage, logrusLogger)
 	return apiServer, nil
 }

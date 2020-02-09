@@ -1,11 +1,10 @@
-package domain_test
+package service
 
 import (
 	"testing"
 	"time"
 
-	"github.com/maxvoronov/otus-go-calendar/internal/domain"
-	"github.com/maxvoronov/otus-go-calendar/storage/inmemory"
+	"github.com/maxvoronov/otus-go-calendar/internal/storage/inmemory"
 )
 
 type testEventData struct {
@@ -15,15 +14,10 @@ type testEventData struct {
 }
 
 func TestCreateCalendar(t *testing.T) {
-	calendarTitle := "My Calendar"
-	calendar := domain.NewCalendar(calendarTitle, inmemory.NewStorage())
+	calendar := NewCalendarService(inmemory.NewStorage())
 
 	if calendar == nil {
 		t.Fatalf("Failed to initiate calendar")
-	}
-
-	if calendar.Title != calendarTitle {
-		t.Fatalf("Invalid calendar title: expect [%s], got [%s]", calendarTitle, calendar.Title)
 	}
 }
 
@@ -34,7 +28,7 @@ func TestCreateEvent(t *testing.T) {
 		time.Now().Add(13 * time.Hour),
 	}
 
-	calendar := domain.NewCalendar("My Calendar", inmemory.NewStorage())
+	calendar := NewCalendarService(inmemory.NewStorage())
 	event, err := calendar.CreateEvent(testData.Title, testData.From, testData.To)
 	if err != nil {
 		t.Fatalf("Failed to create event: %s", err)
@@ -68,7 +62,7 @@ func TestSaveEvent(t *testing.T) {
 		time.Now().Add(13 * time.Hour),
 	}
 
-	calendar := domain.NewCalendar("My Calendar", inmemory.NewStorage())
+	calendar := NewCalendarService(inmemory.NewStorage())
 	event, err := calendar.CreateEvent(testData.Title, testData.From, testData.To)
 	if err != nil {
 		t.Fatalf("Failed to create event: %s", err)
@@ -92,7 +86,7 @@ func TestSaveEvent(t *testing.T) {
 
 func TestRemoveEvent(t *testing.T) {
 	eventTime := time.Now()
-	calendar := domain.NewCalendar("My Calendar", inmemory.NewStorage())
+	calendar := NewCalendarService(inmemory.NewStorage())
 	event1, _ := calendar.CreateEvent("Event #1", eventTime, eventTime)
 	_, _ = calendar.CreateEvent("Event #2", eventTime, eventTime)
 	_, _ = calendar.CreateEvent("Event #3", eventTime, eventTime)

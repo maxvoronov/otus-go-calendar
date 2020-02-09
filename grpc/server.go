@@ -4,10 +4,10 @@ import (
 	"net"
 	"time"
 
-	"github.com/maxvoronov/otus-go-calendar/internal/domain"
-	"github.com/sirupsen/logrus"
-
 	eventproto "github.com/maxvoronov/otus-go-calendar/grpc/proto"
+	"github.com/maxvoronov/otus-go-calendar/internal/domain"
+	"github.com/maxvoronov/otus-go-calendar/internal/service"
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
@@ -19,12 +19,13 @@ type ServerConfig struct {
 }
 
 type server struct {
-	Storage domain.StorageInterface
-	Logger  *logrus.Logger
+	Calendar *service.CalendarService
+	Storage  domain.StorageInterface
+	Logger   *logrus.Logger
 }
 
-func newServer(storage domain.StorageInterface, logger *logrus.Logger) *server {
-	return &server{Storage: storage, Logger: logger}
+func newServer(calendarSvc *service.CalendarService, storage domain.StorageInterface, logger *logrus.Logger) *server {
+	return &server{Calendar: calendarSvc, Storage: storage, Logger: logger}
 }
 
 // Start gRPC server

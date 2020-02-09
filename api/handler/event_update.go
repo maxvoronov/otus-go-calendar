@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"context"
 	"errors"
 	"net/http"
 	"time"
@@ -31,13 +30,12 @@ type eventUpdateResponse struct {
 //   date_from: datetime, format 2019-01-02T12:00:00Z
 //   date_to:   datetime, format 2019-01-02T14:00:00Z
 func (h *Handler) EventUpdateHandler(req *http.Request) APIResponse {
-	ctx := context.Background()
 	data := &eventUpdateRequest{}
 	if err := data.parse(req); err != nil {
 		return h.Error(http.StatusBadRequest, err)
 	}
 
-	event, err := h.Storage.GetByID(ctx, data.ID.String())
+	event, err := h.Calendar.GetEventByID(data.ID.String())
 	if err != nil {
 		return h.Error(http.StatusInternalServerError, err)
 	}
@@ -49,7 +47,7 @@ func (h *Handler) EventUpdateHandler(req *http.Request) APIResponse {
 	event.Title = data.Title
 	event.DateFrom = data.DateFrom
 	event.DateTo = data.DateTo
-	if err := h.Storage.Save(ctx, event); err != nil {
+	if err := h.Calendar.UpdateEvent(event); err != nil {
 		return h.Error(http.StatusInternalServerError, err)
 	}
 

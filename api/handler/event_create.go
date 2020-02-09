@@ -1,12 +1,9 @@
 package handler
 
 import (
-	"context"
 	"errors"
 	"net/http"
 	"time"
-
-	"github.com/maxvoronov/otus-go-calendar/internal/domain"
 )
 
 type eventCreateRequest struct {
@@ -34,9 +31,8 @@ func (h *Handler) EventCreateHandler(req *http.Request) APIResponse {
 		return h.Error(http.StatusBadRequest, err)
 	}
 
-	event := domain.NewEvent(data.Title, data.DateFrom, data.DateTo)
-
-	if err := h.Storage.Save(context.Background(), event); err != nil {
+	event, err := h.Calendar.CreateEvent(data.Title, data.DateFrom, data.DateTo)
+	if err != nil {
 		h.Error(http.StatusInternalServerError, err)
 	}
 

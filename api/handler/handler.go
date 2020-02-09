@@ -6,14 +6,16 @@ import (
 	"strconv"
 
 	"github.com/maxvoronov/otus-go-calendar/internal/domain"
+	"github.com/maxvoronov/otus-go-calendar/internal/service"
 	"github.com/maxvoronov/otus-go-calendar/internal/version"
 	"github.com/sirupsen/logrus"
 )
 
 // Handler for processing API endpoints
 type Handler struct {
-	Storage domain.StorageInterface
-	Logger  *logrus.Logger
+	Calendar *service.CalendarService
+	Storage  domain.StorageInterface
+	Logger   *logrus.Logger
 }
 
 // APIResponse Function for marshaling and sending data
