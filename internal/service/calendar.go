@@ -27,6 +27,11 @@ func (cal *CalendarService) GetEventsByPeriod(from, to time.Time) ([]*domain.Eve
 	return cal.storage.GetByPeriod(context.Background(), from, to)
 }
 
+// GetEventsForNotification Return list of events for notifications
+func (cal *CalendarService) GetEventsForNotification(from, to time.Time) ([]*domain.Event, error) {
+	return cal.storage.GetForNotification(context.Background(), from, to)
+}
+
 // GetEventByID Return event by ID
 func (cal *CalendarService) GetEventByID(id string) (*domain.Event, error) {
 	return cal.storage.GetByID(context.Background(), id)

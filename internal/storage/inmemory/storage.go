@@ -58,6 +58,21 @@ func (storage *Storage) GetByPeriod(_ context.Context, from, to time.Time) ([]*d
 	return result, nil
 }
 
+// GetForNotification Return list of events for notifications
+func (storage *Storage) GetForNotification(_ context.Context, from, to time.Time) ([]*domain.Event, error) {
+	storage.Lock()
+	defer storage.Unlock()
+	result := make([]*domain.Event, 0)
+
+	for _, event := range storage.events {
+		if event.Status == domain.EventStatusNew && event.DateFrom.Before(to) && event.DateFrom.After(from) {
+			result = append(result, event)
+		}
+	}
+
+	return result, nil
+}
+
 // Save Create or update event in storage
 func (storage *Storage) Save(_ context.Context, event *domain.Event) error {
 	storage.Lock()

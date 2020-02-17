@@ -84,14 +84,25 @@ func (storage *Storage) GetByPeriod(ctx context.Context, from, to time.Time) ([]
 	return result, nil
 }
 
+// GetForNotification Return list of events for notifications
+func (storage *Storage) GetForNotification(ctx context.Context, from, to time.Time) ([]*domain.Event, error) {
+	sql := "SELECT * FROM events WHERE status = $1 AND date_from BETWEEN $2 AND $3"
+	result, err := storage.getEventsBySQL(ctx, sql, domain.EventStatusNew, from, to)
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to receive events")
+	}
+
+	return result, nil
+}
+
 // Save Create or update event in storage
 func (storage *Storage) Save(ctx context.Context, event *domain.Event) error {
 	sql := `
-		INSERT INTO events (id,title,date_from,date_to) VALUES($1,$2,$3,$4)
+		INSERT INTO events (id,title,status,date_from,date_to) VALUES($1,$2,$3,$4,$5)
 		ON CONFLICT (id) DO
-		UPDATE SET title = $2, date_from = $3, date_to = $4
+		UPDATE SET title = $2, status = $3, date_from = $4, date_to = $5
 	`
-	_, err := storage.ConnPool.Exec(ctx, sql, event.ID.String(), event.Title, event.DateFrom, event.DateTo)
+	_, err := storage.ConnPool.Exec(ctx, sql, event.ID.String(), event.Title, event.Status, event.DateFrom, event.DateTo)
 	if err != nil {
 		return errors.Wrap(err, "failed to update event")
 	}
@@ -118,15 +129,16 @@ func (storage *Storage) getEventsBySQL(ctx context.Context, sql string, args ...
 
 	result := make([]*domain.Event, 0)
 	for rows.Next() {
-		var id, title string
+		var id, title, status string
 		var dateFrom, dateTo time.Time
-		if err := rows.Scan(&id, &title, &dateFrom, &dateTo); err != nil {
+		if err := rows.Scan(&id, &title, &status, &dateFrom, &dateTo); err != nil {
 			return nil, errors.Wrap(err, "failed to scan result into vars")
 		}
 
 		result = append(result, &domain.Event{
 			ID:       uuid.FromStringOrNil(id),
 			Title:    title,
+			Status:   status,
 			DateFrom: dateFrom,
 			DateTo:   dateTo,
 		})

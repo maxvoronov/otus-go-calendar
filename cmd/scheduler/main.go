@@ -1,7 +1,12 @@
 package main
 
-import "fmt"
+import "log"
 
 func main() {
-	fmt.Println("ToDo: Scheduler")
+	schedulerInstance, err := InitializeScheduler()
+	if err != nil {
+		log.Fatalf("Scheduler init error: %s", err)
+	}
+
+	schedulerInstance.Start()
 }

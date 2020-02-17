@@ -1,6 +1,6 @@
 PROJECT?="github.com/maxvoronov/otus-go-calendar"
 PROJECTNAME="go-calendar"
-DOCKER=docker-compose -f deployments/docker-compose.yml
+DOCKER=docker-compose -f deployments/docker-compose.yml --project-directory deployments
 
 COMMIT := $(shell git rev-parse --short HEAD)
 VERSION := $(shell git describe --tags --abbrev=0)
@@ -12,7 +12,7 @@ help: Makefile
 
 ## build: Build application
 build:
-	@for type in "api" "scheduler" "sender" ; do \
+	@for type in "api" "scheduler" "notificator" ; do \
 		CGO_ENABLED=0 go build \
 			-ldflags="-w -s -X ${PROJECT}/internal/version.Commit=${COMMIT} \
 			-X ${PROJECT}/internal/version.Version=${VERSION} \
